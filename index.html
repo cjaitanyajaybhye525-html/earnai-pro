@@ -1,35 +1,690 @@
-      'My Experience with '+topic,
-      'Come Along with Me! | '+topic,
-      'Trying Something New: '+topic,
-      'The Story Behind '+topic
-    ];
-  }
-  showResult('titleResult',titles.map((x,i)=>(i+1)+'. '+x).join('<br>')+
-    addCopyButton('titleResult'));
+      '<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#09090f">
+<meta name="description" content="EarnAI PRO - Smart tools for business, content creation and income planning.">
+<title>EarnAI PRO — Smart Creator Studio</title>
+
+<style>
+:root {
+  --bg: #09090f;
+  --panel: #14131f;
+  --panel2: #1c192b;
+  --purple: #8b5cf6;
+  --purple2: #6d28d9;
+  --white: #ffffff;
+  --muted: #aaa6bd;
+  --border: #302940;
+  --green: #4ade80;
 }
-function calculateIncome(){
-  const cRaw=document.getElementById('customers').value;
-  const pRaw=document.getElementById('price').value;
-  const c=Number(cRaw),p=Number(pRaw);
-  if(cRaw===''||pRaw===''||!Number.isFinite(c)||!Number.isFinite(p)||c<0||p<0){
-    alert('Enter valid non-negative numbers.');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  line-height: 1.6;
+}
+
+button, input, select, textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(9, 9, 15, .96);
+  border-bottom: 1px solid var(--border);
+  padding: 15px 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 900;
+}
+
+.logo span {
+  color: var(--purple);
+}
+
+.badge {
+  color: #d9c8ff;
+  background: #25183e;
+  border: 1px solid #53358c;
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+.hero {
+  text-align: center;
+  padding: 58px 18px 40px;
+  background:
+    radial-gradient(ellipse at top, #38205f 0%, transparent 65%);
+}
+
+.hero h1 {
+  font-size: clamp(30px, 6vw, 52px);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.gradient-text {
+  color: #b99aff;
+}
+
+.hero p {
+  max-width: 560px;
+  margin: auto;
+  color: var(--muted);
+}
+
+.primary-btn, .secondary-btn {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 17px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, var(--purple), var(--purple2));
+  color: white;
+}
+
+.secondary-btn {
+  background: #282235;
+  color: white;
+  border: 1px solid var(--border);
+}
+
+.container {
+  width: min(1050px, 92%);
+  margin: auto;
+}
+
+.section-title {
+  margin: 35px 0 16px;
+  font-size: 23px;
+}
+
+.section-description {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: -10px;
+  margin-bottom: 18px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 20px 0 30px;
+}
+
+.stat, .card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 18px;
+}
+
+.stat strong {
+  display: block;
+  font-size: 19px;
+  color: #c5a9ff;
+}
+
+.stat small {
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.card h3 {
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.icon {
+  font-size: 26px;
+  margin-bottom: 7px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  margin: 13px 0 6px;
+  color: #ddd5ef;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  background: #0d0c14;
+  border: 1px solid #3b334b;
+  color: white;
+  border-radius: 9px;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--purple);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+
+.card button {
+  width: 100%;
+}
+
+.result {
+  display: none;
+  margin-top: 13px;
+  padding: 13px;
+  background: #211831;
+  border: 1px solid #44305f;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+
+.ad-box {
+  margin: 28px 0;
+  padding: 22px 10px;
+  text-align: center;
+  border: 1px dashed #554b65;
+  border-radius: 12px;
+  color: #8f899e;
+  font-size: 12px;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.plan {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 22px;
+}
+
+.plan.featured {
+  border: 1px solid var(--purple);
+  background: linear-gradient(150deg, #211637, #14131f);
+}
+
+.price {
+  font-size: 30px;
+  font-weight: bold;
+  margin: 12px 0;
+}
+
+.price small {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.plan ul {
+  list-style: none;
+  margin: 15px 0;
+}
+
+.plan li {
+  font-size: 14px;
+  padding: 5px 0;
+  color: #d4cde1;
+}
+
+.plan li::before {
+  content: "✓ ";
+  color: var(--green);
+}
+
+.note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+footer {
+  text-align: center;
+  padding: 30px 15px;
+  margin-top: 40px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+footer a {
+  color: #c4a5ff;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 13px 4%;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .grid, .plans {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding-top: 42px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Earn<span>AI</span> PRO 🚀</div>
+  <div class="badge">CREATOR STUDIO</div>
+</header>
+
+<section class="hero">
+  <div class="badge">YOUR SMART BUSINESS TOOLKIT</div>
+  <h1>Build Smarter.<br><span class="gradient-text">Create More.</span></h1>
+  <p>Explore business ideas, create content and estimate your revenue with simple tools.</p>
+  <button class="primary-btn" onclick="document.getElementById('tools').scrollIntoView()">
+    Explore Free Tools ↓
+  </button>
+</section>
+
+<main class="container">
+
+  <div class="stats">
+    <div class="stat">
+      <strong>4 Tools</strong>
+      <small>Useful starter utilities</small>
+    </div>
+    <div class="stat">
+      <strong>Free</strong>
+      <small>Try the available tools</small>
+    </div>
+    <div class="stat">
+      <strong>PRO</strong>
+      <small>Premium-ready design</small>
+    </div>
+  </div>
+
+  <section id="tools">
+    <h2 class="section-title">⚡ Smart Tools</h2>
+    <p class="section-description">Choose a tool and start creating.</p>
+
+    <div class="grid">
+
+      <article class="card">
+        <div class="icon">💡</div>
+        <h3>Business Idea Generator</h3>
+        <p>Explore ideas based on your budget and interests.</p>
+
+        <label for="budget">Budget (₹)</label>
+        <input id="budget" type="number" min="0" placeholder="e.g. 1000">
+
+        <label for="interest">Your interest</label>
+        <select id="interest">
+          <option value="online">Online business</option>
+          <option value="technology">Technology</option>
+          <option value="design">Design and editing</option>
+          <option value="local">Local business</option>
+        </select>
+
+        <button class="primary-btn" onclick="generateIdeas()">Generate Ideas</button>
+        <div id="ideasResult" class="result"></div>
+        <button class="secondary-btn" onclick="copyResult('ideasResult')">Copy Results</button>
+      </article>
+
+      <article class="card">
+        <div class="icon">📱</div>
+        <h3>Instagram Caption Generator</h3>
+        <p>Create simple caption ideas for your posts.</p>
+
+        <label for="topic">Post topic</label>
+        <input id="topic" placeholder="e.g. New clothing collection">
+
+        <button class="primary-btn" onclick="generateCaption()">Generate Caption</button>
+        <div id="captionResult" class="result"></div>
+        <button class="secondary-btn" onclick="copyResult('captionResult')">Copy Caption</button>
+      </article>
+
+      <article class="card">
+        <div class="icon">🎬</div>
+        <h3>YouTube Title Generator</h3>
+        <p>Get title ideas for your next video.</p>
+
+        <label for="videoTopic">Video topic</label>
+        <input id="videoTopic" placeholder="e.g. Mobile gaming">
+
+        <button class="primary-btn" onclick="generateTitles()">Generate Titles</button>
+        <div id="titleResult" class="result"></div>
+        <button class="secondary-btn" onclick="copyResult('titleResult')">Copy Titles</button>
+      </article>
+
+      <article class="card">
+        <div class="icon">💰</div>
+        <h3>Income Calculator</h3>
+        <p>Estimate revenue before expenses and taxes.</p>
+
+        <label for="customers">Number of customers</label>
+        <input id="customers" type="number" min="0" placeholder="e.g. 20">
+
+        <label for="price">Price per customer (₹)</label>
+        <input id="price" type="number" min="0" placeholder="e.g. 500">
+
+        <button class="primary-btn" onclick="calculateIncome()">Calculate Revenue</button>
+        <div id="incomeResult" class="result"></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">📢 Advertisement Space</h2>
+    <div class="ad-box">
+      ADVERTISEMENT<br>
+      <span>Approved advertising code can be placed here later.</span>
+    </div>
+  </section>
+
+  <section id="premium">
+    <h2 class="section-title">👑 Choose Your Plan</h2>
+    <p class="section-description">Example pricing only. No payment is collected by this demo.</p>
+
+    <div class="plans">
+      <article class="plan">
+        <h3>🆓 Free Plan</h3>
+        <div class="price">₹0 <small>/ month</small></div>
+        <ul>
+          <li>Basic business ideas</li>
+          <li>Caption suggestions</li>
+          <li>YouTube title suggestions</li>
+          <li>Income calculator</li>
+        </ul>
+        <button class="secondary-btn" onclick="showMessage('planResult','You are viewing the Free Plan demo.')">
+          Current Demo Plan
+        </button>
+      </article>
+
+      <article class="plan featured">
+        <div class="badge">PREMIUM CONCEPT</div>
+        <h3 style="margin-top:12px">💎 PRO Plan</h3>
+        <div class="price">₹99 <small>/ month (example)</small></div>
+        <ul>
+          <li>Concept for expanded tool limits</li>
+          <li>Future AI-powered tools</li>
+          <li>Future saved results</li>
+          <li>Future premium features</li>
+        </ul>
+        <button class="primary-btn" onclick="showMessage('planResult','Premium checkout is not connected yet. Do not send money through this demo.')">
+          Explore PRO
+        </button>
+      </article>
+    </div>
+
+    <div id="planResult" class="result"></div>
+    <p class="note">A real subscription requires a secure backend, a payment provider, clear terms and a working cancellation process.</p>
+  </section>
+
+  <section id="referral">
+    <h2 class="section-title">🎁 Referral Program</h2>
+    <div class="card">
+      <h3>Invite Friends</h3>
+      <p>Share EarnAI PRO with friends. This demo does not track referrals or provide rewards yet.</p>
+      <button class="primary-btn" onclick="shareWebsite()">Share EarnAI PRO</button>
+      <div id="shareResult" class="result"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">🔒 Trust & Safety</h2>
+    <div class="card">
+      <p>Never enter passwords, bank details or payment information into an unverified form. This demo does not collect payments or create user accounts.</p>
+      <p style="margin-top:10px">Before launching publicly, add real Privacy Policy, Terms of Service and Contact pages.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Made with ❤️ by EarnAI PRO</p>
+  <p>Simple tools for business beginners.</p>
+  <p style="margin-top:8px">Demo version · <a href="#tools">Explore Tools</a></p>
+</footer>
+
+<script>
+"use strict";
+
+function showResult(id, text) {
+  const box = document.getElementById(id);
+  box.textContent = text;
+  box.style.display = "block";
+}
+
+function showMessage(id, message) {
+  showResult(id, message);
+}
+
+function readNumber(id) {
+  const raw = document.getElementById(id).value.trim();
+
+  if (raw === "") return null;
+
+  const value = Number(raw);
+
+  if (!Number.isFinite(value) || value < 0) return null;
+
+  return value;
+}
+
+function generateIdeas() {
+  const budget = readNumber("budget");
+  const interest = document.getElementById("interest").value;
+
+  if (budget === null) {
+    showResult("ideasResult", "Please enter a valid budget of ₹0 or more.");
     return;
   }
-  const total=c*p;
-  showResult('incomeResult','<b>Estimated monthly revenue: ₹'+
-    total.toLocaleString('en-IN')+'</b><br>'+
-    'Customers: '+c.toLocaleString('en-IN')+
-    '<br>Amount per customer: ₹'+p.toLocaleString('en-IN')+
-    '<br><span class="note">Expenses and taxes are not included.</span>'+
-    addCopyButton('incomeResult'));
-}
-function showCategory(category,button){
-  document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));
-  button.classList.add('active');
-  document.querySelectorAll('.tool').forEach(tool=>{
-    tool.style.display=(category==='all'||tool.dataset.category===category)?'block':'none';
+
+  const ideas = {
+    online: [
+      "Create digital designs or templates",
+      "Offer social media content services",
+      "Start a niche educational content page",
+      "Explore online tutoring if you have a suitable skill"
+    ],
+    technology: [
+      "Build simple websites for local businesses",
+      "Offer basic computer or technology tutoring",
+      "Create simple digital tools",
+      "Learn app development and build demo projects"
+    ],
+    design: [
+      "Create posters and invitations",
+      "Offer thumbnail and short-video editing",
+      "Design social media posts for local shops",
+      "Make custom digital greeting cards"
+    ],
+    local: [
+      "Offer a local delivery or convenience service",
+      "Create promotional posters for nearby shops",
+      "Explore a small custom-gift service",
+      "Offer a service based on skills available in your area"
+    ]
+  };
+
+  let message = "Ideas to explore with a budget of ₹" +
+    budget.toLocaleString("en-IN") + ":\n\n";
+
+  ideas[interest].forEach((idea, index) => {
+    message += (index + 1) + ". " + idea + "\n";
   });
+
+  message += "\nThese are suggestions, not guaranteed profits. Check costs and local demand before investing.";
+
+  showResult("ideasResult", message);
+}
+
+function generateCaption() {
+  const topic = document.getElementById("topic").value.trim();
+
+  if (!topic) {
+    showResult("captionResult", "Please enter a post topic first.");
+    return;
+  }
+
+  const captions = [
+    "✨ Something special: " + topic + "! What do you think?",
+    "🚀 New ideas, new beginnings. Discover " + topic + "!",
+    "💜 A little inspiration, a lot of creativity. " + topic,
+    "🔥 Stay inspired and keep creating. " + topic,
+    "🌟 Made with passion: " + topic + ". Share your thoughts below!"
+  ];
+
+  showResult("captionResult", captions.join("\n\n"));
+}
+
+function generateTitles() {
+  const topic = document.getElementById("videoTopic").value.trim();
+
+  if (!topic) {
+    showResult("titleResult", "Please enter a video topic first.");
+    return;
+  }
+
+  const titles = [
+    topic + " | Everything You Need to Know",
+    "My Experience With " + topic,
+    topic + " for Beginners",
+    "5 Things You Should Know About " + topic,
+    "Let's Explore " + topic + "!",
+    "Is " + topic + " Worth Trying?",
+    "A Beginner's Guide to " + topic
+  ];
+
+  showResult(
+    "titleResult",
+    titles.map((title, index) => (index + 1) + ". " + title).join("\n")
+  );
+}
+
+function calculateIncome() {
+  const customers = readNumber("customers");
+  const price = readNumber("price");
+
+  if (customers === null || price === null) {
+    showResult("incomeResult", "Please enter valid non-negative numbers in both fields.");
+    return;
+  }
+
+  const total = customers * price;
+
+  showResult(
+    "incomeResult",
+    "Estimated total revenue: ₹" + total.toLocaleString("en-IN") +
+    "\n\nCustomers: " + customers.toLocaleString("en-IN") +
+    "\nPrice per customer: ₹" + price.toLocaleString("en-IN") +
+    "\n\nThis is revenue, not profit. Expenses and taxes are not included."
+  );
+}
+
+async function copyResult(id) {
+  const box = document.getElementById(id);
+
+  if (!box || box.style.display === "none" || !box.textContent.trim()) {
+    alert("Generate a result first.");
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(box.textContent);
+    alert("Copied successfully!");
+  } catch (error) {
+    const area = document.createElement("textarea");
+    area.value = box.textContent;
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    document.body.appendChild(area);
+    area.select();
+
+    let copied = false;
+
+    try {
+      copied = document.execCommand("copy");
+    } catch (e) {
+      copied = false;
+    }
+
+    area.remove();
+    alert(copied ? "Copied successfully!" : "Please select and copy the text manually.");
+  }
+}
+
+async function shareWebsite() {
+  const data = {
+    title: "EarnAI PRO",
+    text: "Explore business and content creation tools with EarnAI PRO.",
+    url: window.location.href
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(data);
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        showResult("shareResult", "Sharing was not completed. You can copy the website address from your browser.");
+      }
+    }
+  } else {
+    showResult("shareResult", "Copy your website address from the browser and send it to your friends.");
+  }
 }
 </script>
+
 </body>
-</html>
+</html>>
