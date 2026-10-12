@@ -1,0 +1,35 @@
+      'My Experience with '+topic,
+      'Come Along with Me! | '+topic,
+      'Trying Something New: '+topic,
+      'The Story Behind '+topic
+    ];
+  }
+  showResult('titleResult',titles.map((x,i)=>(i+1)+'. '+x).join('<br>')+
+    addCopyButton('titleResult'));
+}
+function calculateIncome(){
+  const cRaw=document.getElementById('customers').value;
+  const pRaw=document.getElementById('price').value;
+  const c=Number(cRaw),p=Number(pRaw);
+  if(cRaw===''||pRaw===''||!Number.isFinite(c)||!Number.isFinite(p)||c<0||p<0){
+    alert('Enter valid non-negative numbers.');
+    return;
+  }
+  const total=c*p;
+  showResult('incomeResult','<b>Estimated monthly revenue: ₹'+
+    total.toLocaleString('en-IN')+'</b><br>'+
+    'Customers: '+c.toLocaleString('en-IN')+
+    '<br>Amount per customer: ₹'+p.toLocaleString('en-IN')+
+    '<br><span class="note">Expenses and taxes are not included.</span>'+
+    addCopyButton('incomeResult'));
+}
+function showCategory(category,button){
+  document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  document.querySelectorAll('.tool').forEach(tool=>{
+    tool.style.display=(category==='all'||tool.dataset.category===category)?'block':'none';
+  });
+}
+</script>
+</body>
+</html>
